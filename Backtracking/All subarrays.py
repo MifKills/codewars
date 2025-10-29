@@ -39,4 +39,4 @@ def get_all_subarray(arr: list):
 #     return res
 
 
-print(get_all_subsets([1, 2, 3]))
+print(get_all_subarray([1, 2, 3]))

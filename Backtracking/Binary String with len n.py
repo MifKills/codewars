@@ -24,11 +24,9 @@ def backtracking(string: str, n: int, result: list):
 #         if len(path) == n:
 #             result.append("".join(path))
 #             return
-#         # выбор 0
 #         path.append('0')
 #         backtrack()
 #         path.pop()
-#         # выбор 1
 #         path.append('1')
 #         backtrack()
 #         path.pop()
