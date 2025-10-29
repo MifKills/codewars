@@ -9,7 +9,7 @@ class Point:
         return self.x == other.x and self.y == other.y
 
     def __str__(self):
-        return f" {self.x} {self.y}"
+        return f"{self.x} {self.y}"
 
 
 directions = {
@@ -21,25 +21,29 @@ directions = {
 
 
 def find_a_way(labyrinth: list[list[int]]):
-    path: list[Point] = []
+    rows, cols = len(labyrinth), len(labyrinth[0])
+
+    if not rows or not cols or labyrinth[0][0] != 1 or labyrinth[rows-1][cols-1] != 1:
+        return []
+
     start = Point(0, 0)
-    path.append(start)
+    visited = [[False]*cols for _ in range(rows)]
+    path: list[Point] = [start]
     result: list[list[Point]] = []
-    labyrinth_size = len(labyrinth), len(labyrinth[0])
 
     def bt(pos: Point):
-        if pos.x == labyrinth_size[0] - 1 and pos.y == labyrinth_size[1] - 1:
+        if pos.x == rows - 1 and pos.y == cols - 1:
             result.append(path[:])
             return
 
         for direction in directions:
             next_x, next_y = directions[direction](pos.x, pos.y)
-            if next_x < 0 or next_y < 0 or next_x >= labyrinth_size[0] or next_y >= labyrinth_size[1]:
-                continue
-            new_pos = Point(next_x, next_y)
-            if labyrinth[next_x][next_y] == 1 and new_pos not in path:
+            if 0 <= next_x < rows and 0 <= next_y < cols and labyrinth[next_x][next_y] == 1 and not visited[next_x][next_y]:
+                new_pos = Point(next_x, next_y)
+                visited[next_x][next_y] = True
                 path.append(new_pos)
                 bt(new_pos)
+                visited[next_x][next_y] = False
                 path.pop()
 
     bt(start)
