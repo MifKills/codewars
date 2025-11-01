@@ -1,25 +1,24 @@
 def sudoku(puzzle: list[list[int]]):
     start_state: list[list[int]] = puzzle
-    result: list[list[int]] = []
 
     def bt(state: list[list[int]]):
-        if is_solution(state):
-            for row in range(9):
-                result.append(list())
-                for col in range(9):
-                    result[row].append(state[row][col])
-            return
+        free_cells = find_free_space(state)
+        if free_cells == None:
+            return True
 
-        free_row, free_col = find_free_space(state)
+        free_row, free_col = free_cells
 
         for num in range(1, 10):
             if is_valid_choice(state, num, free_row, free_col):
                 state[free_row][free_col] = num
-                bt(state)
+                finished = bt(state)
+                if finished:
+                    return True
                 state[free_row][free_col] = 0
+        return False
 
-    bt(start_state)
-    return result
+    solved = bt(start_state)
+    return puzzle if solved else None
 
 
 def is_solution(state: list[list[int]]):
@@ -35,10 +34,11 @@ def is_solution(state: list[list[int]]):
 
 
 def find_free_space(state):
-    for row in state:
-        for col in row:
-            if col == 0:
-                return state.index(row), row.index(col)
+    for row in range(9):
+        for col in range(9):
+            if state[row][col] == 0:
+                return (row, col)
+    return None
 
 
 def is_valid_choice(state, num, row, col):
@@ -81,5 +81,4 @@ puzzle = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
 
 
 result = sudoku(puzzle)
-for row in result:
-    print(row)
+print(result)
